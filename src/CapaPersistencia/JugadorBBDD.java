@@ -4,36 +4,26 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import CapaDomini.Jugador;
 import CapaDomini.Partida;
 
 
 public class JugadorBBDD {
 
-	///
-
-//		private static Partida partida;
-
-		public static Partida getPartida(int idPartida) throws Exception {
+		public static boolean existJugador(String nom) throws Exception {
 			ConnectionBBDD connection = LoginBBDD.getConnection();
 
 			try {
 
-				String sql = "SELECT * FROM PARTIDA WHERE IDPARTIDA = ?";
+				String sql = "SELECT * FROM JUGADOR WHERE NOM = ?";
 
 				PreparedStatement preparedStatment = connection.prepareStatement(sql);
 				preparedStatment.clearParameters();
-				preparedStatment.setInt(1, idPartida);
+				preparedStatment.setString(1, nom);
 				ResultSet rs = preparedStatment.executeQuery();
 
-				while (rs.next()) {
-					int d1, d2;
-
-					d1 = rs.getInt("DAU1");
-					d2 = rs.getInt("DAU2");
-					return new Partida(d1, d2);
-				}
-
-				throw new Exception("No sha trobat la moneda");
+				return rs.next();
+				
 			} catch (SQLException e) {
 				throw new Exception("Error al agafar la moneda", e);
 			}

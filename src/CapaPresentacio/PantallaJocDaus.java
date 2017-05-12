@@ -34,108 +34,20 @@ public class PantallaJocDaus extends javax.swing.JFrame {
     private javax.swing.JTextField resultat;
     private javax.swing.JTextField textJugador;
     
-    private JTextField userCrendencial;
-	private JTextField passwordCredencial;
-	
-	private ControladorBBDD controladorBBDD;
-    
 	private static PantallaJocDaus frame;
 	
-    public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					frame = new PantallaJocDaus();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-    public PantallaJocDaus() {
-    	
-    	initPantallaCredencials();
-    	
+	public PantallaJocDaus() {
+
+    	initComponents();
+    	this.controladorJocDaus = new ControladorJocDaus();
+        textJugador.setText(controladorJocDaus.getNomJugador());      
+        int i = textJugador.getText().length();
+        textJugador.setSelectionStart(0);
+        textJugador.setSelectionEnd(i);        
+        this.setVisible(true);
     }
    
-    private void initPantallaCredencials() {
-    	
-    	setBounds(100, 100, 480, 345);
-    	setResizable(false);
-    	
-    	setLayout(null);
-		
-		JLabel lblIniciDeSessi = new JLabel("Inici de sessi\u00F3 de Base de Dades");
-		lblIniciDeSessi.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblIniciDeSessi.setHorizontalAlignment(SwingConstants.CENTER);
-		lblIniciDeSessi.setBounds(10, 11, 430, 91);
-		
-		add(lblIniciDeSessi);
-		
-		JLabel lblNomDusuari = new JLabel("Nom d'usuari:");	
-		lblNomDusuari.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNomDusuari.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lblNomDusuari.setBounds(10, 113, 134, 42);
-		add(lblNomDusuari);
-		
-		JLabel lblPassword = new JLabel("Password:");
-		lblPassword.setHorizontalAlignment(SwingConstants.CENTER);
-		lblPassword.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lblPassword.setBounds(10, 184, 134, 42);
-		add(lblPassword);
-		
-		userCrendencial = new JTextField();
-		userCrendencial.setBounds(157, 124, 193, 20);
-		
-		add(userCrendencial);
-		userCrendencial.setColumns(10);
-		
-		passwordCredencial = new JTextField();
-		passwordCredencial.setBounds(154, 197, 196, 20);
-	
-		add(passwordCredencial);
-		passwordCredencial.setColumns(10);
-		
-		JButton btnIniciaSessi = new JButton("Inicia Sessi\u00F3");
-		btnIniciaSessi.setBounds(331, 252, 109, 37);
-		btnIniciaSessi.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-            	btnIniciaSessiActionPerformed(evt);
-            }
-
-        });
-		
-		add(btnIniciaSessi);
-		
-	}
-
-
-	private void btnIniciaSessiActionPerformed(ActionEvent evt) {
-		
-		try {
-			controladorBBDD = new ControladorBBDD(userCrendencial.getText(), passwordCredencial.getText());
-			
-	    	getContentPane().removeAll();
-			
-			initComponents();
-			this.controladorJocDaus = new ControladorJocDaus();
-			textJugador.setText(controladorJocDaus.getNomJugador());
-			int i = textJugador.getText().length();
-			textJugador.setSelectionStart(0);
-			textJugador.setSelectionEnd(i);
-			this.setVisible(true);
-						
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(frame,
-				    "Error: No s'han introduit correctament les credencials.",
-				    "Error d'inicialització",
-				    JOptionPane.ERROR_MESSAGE);
-		}
-		
-	}
-    
 	private void initComponents() {
 
 		setResizable(true);
