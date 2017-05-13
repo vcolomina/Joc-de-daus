@@ -26,7 +26,7 @@ public class Partida {
         } else {
             resultat = "perduda";
         }
-        return "Dau1: " + dau1 + ", Dau2: " + dau2 + ", Resultat: " + resultat;
+        return "Dau1: " + dau1 + ", Dau2: " + dau2 + ", Resultat: " + resultat + "\n";
     }
 
     public int getDau1() {

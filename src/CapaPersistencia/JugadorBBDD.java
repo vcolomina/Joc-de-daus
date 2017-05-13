@@ -25,42 +25,30 @@ public class JugadorBBDD {
 				return rs.next();
 				
 			} catch (SQLException e) {
-				throw new Exception("Error al agafar la moneda", e);
+				throw new Exception("Error al buscar un jugador", e);
 			}
 
 		}
 
-		public void storePartida(Partida partida, int idPartida) throws Exception {
+		public static void saveJugador(String nom) throws Exception {
 
 			ConnectionBBDD connection = LoginBBDD.getConnection();
 			
 			try {
 
-				String sql = "UPDATE PARTIDA SET DAU1 = ? WHERE ID_PARTIDA = ?)";
+				String sql = "INSERT INTO JUGADOR VALUES(?)";
 				PreparedStatement pst = connection.prepareStatement(sql);
-				pst.setInt(1, partida.getDau1());
-				pst.setInt(2, idPartida);
+				pst.setString(1, nom);
 
 				if (pst.executeUpdate() != 1) {
-					throw new Exception("Partida no guardada");
+					throw new Exception("Jugador no guardat");
 				}
 
-				sql = "UPDATE PARTIDA SET DAU2 = ? WHERE ID_PARTIDA = ?)";
-				pst = connection.prepareStatement(sql);
-				pst.setInt(1, partida.getDau2());
-				pst.setInt(2, idPartida);
-
-				if (pst.executeUpdate() != 1) {
-					throw new Exception("Partida no guardada");
-				}
-				
 			} catch (SQLException e) {
-				throw new Exception("Error al inserir la Partida");
+				throw new Exception("Error al guardar un jugador");
 			}
+			
 		}
 
 	
-	///
-	
-
 }

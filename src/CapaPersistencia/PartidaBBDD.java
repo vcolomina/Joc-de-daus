@@ -3,16 +3,15 @@ package CapaPersistencia;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import CapaDomini.Jugador;
 import CapaDomini.Partida;
 
 public class PartidaBBDD {
 
-
-	//	private static Partida partida;
-
-	public void savePartida(Jugador jugador, Partida partida, int idPartida) throws Exception {
+	public static void savePartida(String nom, int dau1, int dau2) throws Exception {
 
 		ConnectionBBDD connection = LoginBBDD.getConnection();
 		
@@ -20,11 +19,14 @@ public class PartidaBBDD {
 
 			String sql = "INSERT INTO PARTIDA VALUES(?, ?, ?, ?)";
 			PreparedStatement pst = connection.prepareStatement(sql);
-			pst.setString(1, jugador.getNom());
-			pst.setInt(2, partida.getDau1());
-			pst.setInt(3, partida.getDau2());
-			pst.setInt(4, idPartida);
-
+			pst.setString(1, nom);
+			pst.setInt(2, dau1);
+			pst.setInt(3, dau2);
+			pst.setInt(4, 0);
+			
+			if (pst.executeUpdate() != 1) {
+				throw new Exception("Partida no guardada");
+			}
 			
 			
 		} catch (SQLException e) {
@@ -32,31 +34,32 @@ public class PartidaBBDD {
 		}
 	}
 
-	
-	
-	public static Partida getPartida(int idPartida) throws Exception {
+	public static List<Partida> getPartides(String nom) throws Exception {
 		ConnectionBBDD connection = LoginBBDD.getConnection();
 
 		try {
 
-			String sql = "SELECT * FROM PARTIDA WHERE IDPARTIDA = ?";
+			String sql = "SELECT * FROM PARTIDA WHERE NOM = ?";
 
 			PreparedStatement preparedStatment = connection.prepareStatement(sql);
 			preparedStatment.clearParameters();
-			preparedStatment.setInt(1, idPartida);
+			preparedStatment.setString(1, nom);
 			ResultSet rs = preparedStatment.executeQuery();
 
+			List<Partida> partidesJugador = new ArrayList<Partida>();
+			
 			while (rs.next()) {
 				int d1, d2;
 
 				d1 = rs.getInt("DAU1");
 				d2 = rs.getInt("DAU2");
-				return new Partida(d1, d2);
+				partidesJugador.add(new Partida(d1, d2));
 			}
+			
+			return partidesJugador;
 
-			throw new Exception("No sha trobat la moneda");
 		} catch (SQLException e) {
-			throw new Exception("Error al agafar la moneda", e);
+			throw new Exception("Error al buscar les partides", e);
 		}
 
 	}

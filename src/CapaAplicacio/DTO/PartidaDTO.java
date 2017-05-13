@@ -21,8 +21,6 @@ public class PartidaDTO {
 		return "" + dau2;
 	}
 	
-
-
 	public String getResultat() {
 		  String resultat;
 

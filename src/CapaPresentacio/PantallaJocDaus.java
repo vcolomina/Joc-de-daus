@@ -14,10 +14,13 @@ import javax.swing.SwingConstants;
 import CapaAplicacio.ControladorBBDD;
 import CapaAplicacio.ControladorJocDaus;
 import CapaAplicacio.DTO.PartidaDTO;
+import CapaDomini.Partida;
 
 public class PantallaJocDaus extends javax.swing.JFrame {
 
     private ControladorJocDaus controladorJocDaus;
+    private ControladorBBDD controladorBBDD;
+    
     private javax.swing.JTextField dau1;
     private javax.swing.JTextField dau2;
     private javax.swing.JTextField guanyades;
@@ -51,6 +54,8 @@ public class PantallaJocDaus extends javax.swing.JFrame {
 	private void initComponents() {
 
 		setResizable(true);
+		
+		controladorBBDD = new ControladorBBDD();
 		
         jLabel1 = new javax.swing.JLabel();
         jLabel1.setBounds(39, 38, 88, 17);
@@ -178,24 +183,52 @@ public class PantallaJocDaus extends javax.swing.JFrame {
         resultat.setText(partida.getResultat());
         String s = String.format("%3.2f", controladorJocDaus.guanyadesPercent());
         guanyades.setText(s);
+        try {
+			controladorBBDD.savePartida(textJugador.getText(), Integer.parseInt(dau1.getText()), Integer.parseInt(dau2.getText()));
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
     }
 
     private void nomJugadorActionPerformed(java.awt.event.ActionEvent evt) {
         try {
+        	
             textJugador.setEnabled(false);
             controladorJocDaus.nouJugador(textJugador.getText());
+
+            if(!controladorBBDD.existJugador(textJugador.getText()))
+            	controladorBBDD.storeJugador(textJugador.getText());
+            
+            
             jugar.setEnabled(true);
             llistaJugades.setEnabled(true);
+            
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(),
                     "Error lectura BBDD", JOptionPane.ERROR_MESSAGE);
+            
+            textJugador.setEnabled(true);
+            jugar.setEnabled(false);
+            llistaJugades.setEnabled(false);
         }
     }
 
     private void llistaJugadesActionPerformed(java.awt.event.ActionEvent evt) {
-        List <PartidaDTO> partides = controladorJocDaus.getPartides();
+    	
+    	List <PartidaDTO> partides = controladorJocDaus.getPartides();
         String result = "";
+        
+        try {
+			for(Partida p: controladorBBDD.getPartides(textJugador.getText())){
+				result += p.toString();
+			}
+		} catch (Exception e) {
+			e.getMessage();
+		}
+        
         for(PartidaDTO p: partides){
         	result += p.getResultat();
         }
